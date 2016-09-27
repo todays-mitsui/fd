@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Face Detection</title>
+<link rel="stylesheet" href="css/sanitize.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container">
+  <h1>Face Detection</h1>
+
+  <p class="repo"><a href="https://github.com/todays-mitsui/fd">リポジトリ</a></p>
+
+  <ul>
+    <li><figure class="target"><img src="img/01.jpg"></figure></li>
+    <li><figure class="target"><img src="img/02.jpg"></figure></li>
+    <li><figure class="target"><img src="img/03.jpg"></figure></li>
+    <li><figure class="target"><img src="img/04.jpg"></figure></li>
+    <li><figure class="target"><img src="img/05.jpg"></figure></li>
+    <li><figure class="target"><img src="img/06.jpg"></figure></li>
+    <li><figure class="target"><img src="img/07.jpg"></figure></li>
+    <li><figure class="target"><img src="img/08.jpg"></figure></li>
+    <li><figure class="target"><img src="img/09.jpg"></figure></li>
+    <li><figure class="target"><img src="img/10.jpg"></figure></li>
+    <li><figure class="target"><img src="img/11.jpg"></figure></li>
+    <li><figure class="target"><img src="img/12.jpg"></figure></li>
+  </ul>
+
+  <address class="copyright">&copy; 2016 Mitsui</address>
+</div><!-- /.container -->
+
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery.facedetection.min.js"></script>
+<script>
+(function() {
+  var $title = $('title');
+  var cache = $title.text();
+  $title.text('画像読み込み中...');
+
+  $(window).load(function() {
+    $title.text('処理中...');
+
+    var $figures = $('.target');
+
+    $figures.each(function() {
+      var $this = $(this);
+
+      $this.find('img').faceDetection({
+        complete: function(faces) {
+          console.info(faces);
+
+          faces.forEach(function(face) {
+            var frame = $('<div class="frame" />').css({
+              left: face.positionX * face.scaleX,
+              top: face.positionY * face.scaleY,
+              width: face.width * face.scaleX,
+              height: face.height * face.scaleY,
+            });
+
+            $this.append(frame);
+          });
+        },
+      });
+    })
+    .promise()
+    .done(function(){ $title.text(cache); });
+  });
+})();
+</script>
+</body>
+</html>
